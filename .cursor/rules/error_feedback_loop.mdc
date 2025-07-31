@@ -1,0 +1,13 @@
+description: Boucle de rétroaction sur erreur de validation
+globs:
+  - "*.py"
+filters:
+  - type: content
+    pattern: "ValidationError"
+actions:
+  - type: execute
+    command: |
+      echo "Envoi à l’agent IA du détail de l’erreur de Pydantic"
+  - type: suggest
+    message: |
+      Lorsqu’une ValidationError survient, renvoyez à l’IA le message exact et le champ concerné.

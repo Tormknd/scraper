@@ -1,0 +1,19 @@
+description: Appliquer retry/backoff sur chaque requête HTTP
+globs:
+  - "*.py"
+filters:
+  - type: content
+    pattern: "httpx\.AsyncClient"
+actions:
+  - type: reject
+    message: |
+    Toute utilisation de AsyncClient doit être couplée à tenacity pour gérer les échecs réseau.
+  - type: suggest
+    message: |
+    • Utilisez @retry(exponential...
+    • Exemple :
+      ```python
+      @retry(stop=stop_after_attempt(5), wait=wait_exponential(min=1, max=10))
+      async def fetch(url):
+          return await client.get(url)
+      ```

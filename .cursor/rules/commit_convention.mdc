@@ -1,0 +1,13 @@
+description: Commits automatiques en Conventional Commits
+globs:
+  - ".*"
+filters:
+  - type: event
+    pattern: "build_success"
+actions:
+  - type: execute
+    command: |
+      git commit -am "feat(scraper): implement new extractor"
+  - type: suggest
+    message: |
+      Utilisez la convention <type>(<scope>): <description>. Type: feat, fix, docs, chore.

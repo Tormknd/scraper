@@ -1,0 +1,14 @@
+description: Exiger un schéma JSON pour toute tâche d’extraction
+globs:
+  - "*.py"
+filters:
+  - type: prompt_content
+    pattern: "\{.*\\\".*\\\":.*\}"
+actions:
+  - type: reject
+    message: |
+    Tout prompt d’extraction doit inclure un modèle JSON définissant les champs et leur type.
+  - type: suggest
+    message: |
+    1. Fournissez un schéma JSON Pydantic ou un dictionnaire Python.
+    2. Exemple : { "title": "str", "price": "float" }
