@@ -4,7 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const response = await fetch('http://localhost:8000/chat', {
+    const response = await fetch('https://scraper-mq45.onrender.com/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         context: {
           endpoint: '/chat',
           method: 'POST',
-          backend_url: 'http://localhost:8000/chat'
+          backend_url: 'https://scraper-mq45.onrender.com/chat'
         }
       },
       { status: 500 }

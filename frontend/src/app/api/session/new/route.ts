@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST() {
   try {
-    const response = await fetch('http://localhost:8000/session/new', {
+    const response = await fetch('https://scraper-mq45.onrender.com/session/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const response = await fetch('http://localhost:8000/extract', {
+    const response = await fetch('https://scraper-mq45.onrender.com/extract', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         context: {
           endpoint: '/extract',
           method: 'POST',
-          backend_url: 'http://localhost:8000/extract'
+          backend_url: 'https://scraper-mq45.onrender.com/extract'
         }
       },
       { status: 500 }

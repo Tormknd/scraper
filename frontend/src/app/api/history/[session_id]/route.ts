@@ -7,7 +7,7 @@ export async function GET(
   try {
     const { session_id } = await params;
     
-    const response = await fetch(`http://localhost:8000/history/${session_id}`, {
+    const response = await fetch(`https://scraper-mq45.onrender.com/history/${session_id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

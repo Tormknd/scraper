@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   try {
     const { url } = await req.json();
 
-    const response = await fetch('http://localhost:8000/scrape', {
+    const response = await fetch('https://scraper-mq45.onrender.com/scrape', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
