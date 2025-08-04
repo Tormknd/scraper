@@ -10,7 +10,7 @@ import { Loader2, Bot, User, Globe, Download } from "lucide-react";
  *   new                  crée une nouvelle session
  *   analyze <url>        analyse un site web
  *   chat <message>       envoie un message à l'IA
- *   extract <requirements> extrait des données selon les exigences
+ *   scrape <requirements> extrait des données selon les exigences
  *   history              affiche l'historique de conversation
  *   clear                efface l'écran
  * ↑ / ↓                  navigue dans l'historique (10 entrées)
@@ -29,7 +29,7 @@ export default function ScraperTerminal() {
     "  new                    Créer une nouvelle session IA",
     "  analyze <url>          Analyser un site web",
     "  chat <message>         Envoyer un message à l'IA",
-    "  extract <requirements> Extraire des données selon vos besoins",
+    "  scrape <requirements> Extraire des données selon vos besoins",
     "  history                Afficher l'historique de conversation",
     "  clear                  Effacer l'écran",
     "  help                   Afficher cette aide",
@@ -38,7 +38,7 @@ export default function ScraperTerminal() {
     "  1. new                 # Créer une session",
     "  2. analyze https://example.com",
     "  3. chat 'Je veux tous les produits avec prix'",
-    "  4. extract 'Extrais tous les produits avec titre, prix et image'",
+    "  4. scrape 'Extrais tous les produits avec titre, prix et image'",
     "",
     "💡 Astuce: Vous pouvez sélectionner et copier le texte du terminal !",
   ].join("\n");
@@ -231,9 +231,9 @@ export default function ScraperTerminal() {
       } finally {
         setLoading(false);
       }
-    } else if (cmd === "extract") {
+    } else if (cmd === "scrape") {
       if (tokens.length < 2) {
-        push({ type: "error", value: "usage: extract <requirements>" });
+        push({ type: "error", value: "usage: scrape <requirements>" });
         return;
       }
       if (!currentSessionId) {
@@ -296,8 +296,8 @@ export default function ScraperTerminal() {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 error: errorMessage,
-                context: `Extraction de données avec les exigences: "${requirements}"`,
-                userCommand: `extract ${requirements}`,
+                              context: `Extraction de données avec les exigences: "${requirements}"`,
+              userCommand: `scrape ${requirements}`,
                 sessionId: currentSessionId
               }),
             });
