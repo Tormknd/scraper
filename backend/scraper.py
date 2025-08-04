@@ -169,14 +169,44 @@ def get_or_create_session(session_id: str) -> ConversationSession:
 
 def chat_with_ai(session_id: str, user_message: str, tools: Optional[List] = None) -> str:
     session = get_or_create_session(session_id)
-    session.add_message("user", user_message)
+    
+    # Check for ADMIN MODE
+    is_admin_mode = "ADMIN MODE" in user_message.upper()
+    
+    if is_admin_mode:
+        # Remove "ADMIN MODE" from the message for processing
+        clean_message = user_message.replace("ADMIN MODE", "").replace("admin mode", "").strip()
+        session.add_message("user", clean_message)
+        
+        # Get backend code and context
+        backend_context = _get_backend_context()
+        
+        # Create admin system message
+        admin_system_message = {
+            "role": "system",
+            "content": f"""You are an AI assistant with ADMIN MODE access to the backend code. You can help debug issues and understand the application.
+
+BACKEND CONTEXT:
+{backend_context}
+
+CONVERSATION HISTORY:
+{_format_conversation_history(session)}
+
+You have access to the full backend code and can help identify and fix issues. Be specific about what you find and suggest solutions."""
+        }
+        
+        # Get messages for API with admin context
+        messages = [admin_system_message] + session.get_messages_for_api()
+    else:
+        session.add_message("user", user_message)
+        messages = session.get_messages_for_api()
     
     client = OpenAI(api_key=API_KEY, base_url=None)
     
     try:
         response = client.chat.completions.create(
             model=MODEL,
-            messages=session.get_messages_for_api(),
+            messages=messages,
             tools=tools,
             tool_choice="auto" if tools else None,
             max_tokens=MAX_TOKENS,
@@ -232,6 +262,108 @@ def chat_with_ai(session_id: str, user_message: str, tools: Optional[List] = Non
         error_msg = f"Erreur lors de la communication avec l'IA: {str(e)}"
         session.add_message("assistant", error_msg)
         return error_msg
+
+def _get_backend_context() -> str:
+    """Get the backend code and context for ADMIN MODE"""
+    try:
+        # Read the main scraper file
+        scraper_path = pathlib.Path(__file__)
+        with open(scraper_path, 'r', encoding='utf-8') as f:
+            scraper_code = f.read()
+        
+        # Read main.py if it exists
+        main_path = scraper_path.parent / "main.py"
+        main_code = ""
+        if main_path.exists():
+            with open(main_path, 'r', encoding='utf-8') as f:
+                main_code = f.read()
+        
+        # Read requirements if it exists
+        requirements_path = scraper_path.parent / "requirements-basic.txt"
+        requirements = ""
+        if requirements_path.exists():
+            with open(requirements_path, 'r', encoding='utf-8') as f:
+                requirements = f.read()
+        
+        context = f"""
+APPLICATION OVERVIEW:
+This is a web scraping application with AI-powered analysis and data extraction.
+
+MAIN FILES:
+1. scraper.py - Core scraping and AI functionality
+2. main.py - FastAPI server endpoints
+3. requirements-basic.txt - Dependencies
+
+SCRAPER.PY CODE:
+{scraper_code}
+
+MAIN.PY CODE:
+{main_code}
+
+REQUIREMENTS:
+{requirements}
+
+DEBUG INFO:
+{_debug_environment()}
+
+CURRENT ISSUES:
+- The 'Client.__init__() got an unexpected keyword argument 'proxies'' error occurs when OpenAI client is initialized
+- This happens in analyze_website, extract_data_with_requirements, and chat_with_ai functions
+- The issue is likely related to requests.Session() proxy settings being inherited
+
+ENVIRONMENT:
+- Python 3.11.7
+- OpenAI API integration
+- FastAPI backend
+- Render deployment
+
+POTENTIAL SOLUTIONS:
+1. Check if requests.Session() is somehow passing proxy settings to OpenAI client
+2. Verify OpenAI client initialization parameters
+3. Check environment variables for proxy settings
+4. Ensure clean OpenAI client creation without inherited settings
+"""
+        return context
+    except Exception as e:
+        return f"Error getting backend context: {str(e)}"
+
+def _format_conversation_history(session: ConversationSession) -> str:
+    """Format conversation history for ADMIN MODE"""
+    history = []
+    for msg in session.messages[-10:]:  # Last 10 messages
+        history.append(f"{msg.role.upper()}: {msg.content}")
+    return "\n".join(history)
+
+def _debug_environment() -> str:
+    """Debug environment and configuration for ADMIN MODE"""
+    try:
+        import sys
+        import requests
+        
+        debug_info = f"""
+ENVIRONMENT DEBUG INFO:
+
+Python Version: {sys.version}
+OpenAI Version: {getattr(requests, '__version__', 'Unknown')}
+Requests Version: {requests.__version__}
+
+Environment Variables:
+- OPENAI_API_KEY: {'Set' if API_KEY else 'Not Set'}
+- OPENAI_MODEL: {MODEL}
+
+Current Working Directory: {pathlib.Path.cwd()}
+Backend Directory: {pathlib.Path(__file__).parent}
+
+Available Files:
+"""
+        
+        backend_dir = pathlib.Path(__file__).parent
+        for file in backend_dir.glob("*.py"):
+            debug_info += f"- {file.name}\n"
+        
+        return debug_info
+    except Exception as e:
+        return f"Error getting debug info: {str(e)}"
 
 def _fetch(url: str) -> str:
     session = requests.Session()
