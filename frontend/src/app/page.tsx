@@ -476,10 +476,10 @@ export default function ScraperTerminal() {
                   let isWebp = false;
                   
                   if (imgLocal) {
-                    // Backend returns paths like "/images/filename.jpg"
-                    imageSrc = `http://localhost:8000${imgLocal}`;
+                    // Backend now returns full URLs like "https://scraper-mq45.onrender.com/images/filename.jpg"
+                    imageSrc = imgLocal;
                     isWebp = imgLocal.endsWith(".webp");
-                    console.log(`🔗 Constructed image URL: ${imageSrc}`);
+                    console.log(`🔗 Using backend image URL: ${imageSrc}`);
                   } else if (img) {
                     // Fallback to original image URL
                     imageSrc = img;

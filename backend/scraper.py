@@ -771,9 +771,9 @@ def analyze_website(session_id: str, url: str) -> Dict:
         for suggestion in analysis.get('suggested_extractions', []):
             ai_response += f"• {suggestion}\n"
         ai_response += f"\n**🚀 Prochaines étapes:**\n"
-        ai_response += f"• Utilisez 'extract [vos exigences]' pour extraire les données\n"
-        ai_response += f"• Exemple: 'extract book titles and prices'\n"
-        ai_response += f"• Ou: 'extract all product information'"
+        ai_response += f"• Utilisez 'scrape [vos exigences]' pour extraire les données\n"
+        ai_response += f"• Exemple: 'scrape book titles and prices'\n"
+        ai_response += f"• Ou: 'scrape all product information'"
         
         return {
             "success": True,
@@ -795,7 +795,7 @@ def extract_data_with_requirements(session_id: str, requirements: str) -> Dict:
         return {
             "success": False,
             "error": "Aucune URL analysée. Utilisez d'abord 'analyze <url>'",
-            "ai_response": "Veuillez d'abord analyser un site web avec 'analyze <url>'"
+            "ai_response": "Veuillez d'abord analyser un site web avec 'analyze <url>' puis utilisez 'scrape <requirements>'"
         }
     
     try:
@@ -877,21 +877,21 @@ def get_help_info() -> Dict:
         "commands": {
             "new": "🆕 Créer une nouvelle session IA",
             "analyze <url>": "🔍 Analyser un site web et déterminer les données disponibles",
-            "extract <requirements>": "📊 Extraire des données selon vos exigences",
+            "scrape <requirements>": "📊 Extraire des données selon vos exigences",
             "chat <message>": "💬 Poser une question à l'IA",
             "help": "❓ Afficher cette aide",
             "history": "📜 Voir l'historique de conversation"
         },
         "examples": {
             "analyze https://example.com": "🔍 Analyser le site example.com",
-            "extract produits avec prix et images": "📊 Extraire les produits avec leurs prix et images",
-            "extract articles de blog": "📊 Extraire les articles de blog",
+            "scrape produits avec prix et images": "📊 Extraire les produits avec leurs prix et images",
+            "scrape articles de blog": "📊 Extraire les articles de blog",
             "chat comment extraire les prix?": "💬 Demander de l'aide sur l'extraction des prix"
         },
         "workflow": {
             "step1": "1. 🆕 'new' - Créer une session",
             "step2": "2. 🔍 'analyze <url>' - Analyser le site",
-            "step3": "3. 📊 'extract <requirements>' - Extraire les données",
+            "step3": "3. 📊 'scrape <requirements>' - Extraire les données",
             "step4": "4. 💬 'chat <question>' - Poser des questions"
         }
     }
