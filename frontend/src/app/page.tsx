@@ -516,25 +516,7 @@ export default function ScraperTerminal() {
                           }}
                         />
                       </picture>
-                      {/* Debug info - show image URL if available */}
-                      {imageSrc && (
-                        <div className="text-xs text-zinc-600 mt-1 break-all">
-                          URL: {imageSrc}
-                        </div>
-                      )}
-                      {/* Test image element */}
-                      {imageSrc && (
-                        <div className="mt-2">
-                          <div className="text-xs text-yellow-400">Test Image:</div>
-                          <img 
-                            src={imageSrc} 
-                            alt="Test" 
-                            className="w-16 h-16 object-cover border border-red-500"
-                            onError={(e) => console.log(`Test image failed: ${imageSrc}`)}
-                            onLoad={() => console.log(`Test image loaded: ${imageSrc}`)}
-                          />
-                        </div>
-                      )}
+
                       <figcaption
                         className="mt-1 text-xs text-zinc-400 truncate"
                         title={title}
