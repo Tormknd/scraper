@@ -6,8 +6,9 @@ beautifulsoup4==4.12.2
 openai==1.3.7
 python-dotenv==1.0.0
 tiktoken==0.5.1
-Pillow==10.0.1
+Pillow==10.2.0
 aiofiles==23.2.1
+httpx==0.27.2
 
 # Advanced scraping libraries (optional for basic deployment)
 newspaper3k==0.2.8
