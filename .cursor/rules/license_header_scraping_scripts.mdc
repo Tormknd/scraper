@@ -1,5 +1,6 @@
-description: Ajouter en-tête de licence sur création de fichier
-globs:
+---
+alwaysApply: false
+---
   - "**/*.py"
 filters:
   - type: event

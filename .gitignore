@@ -5,6 +5,8 @@
 .env.test.local
 .env.production.local
 
+.cursor/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -34,6 +36,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv/
 
 # Node.js
 node_modules/
@@ -128,5 +131,24 @@ config.json
 *.sqlite
 *.sqlite3
 
-# Images (optional - uncomment if you don't want to track scraped images)
-# backend/images/ 
+# Scraped images and data
+backend/images/
+backend/*_evaluation_report.json
+backend/package-lock.json
+
+# Python cache
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+
+# Selenium and browser drivers
+backend/chromedriver*
+backend/geckodriver*
+backend/msedgedriver*
+
+# Playwright browsers
+backend/.playwright/
+
+# Scrapy cache
+backend/.scrapy/ 

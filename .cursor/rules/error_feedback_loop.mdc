@@ -1,5 +1,6 @@
-description: Boucle de rétroaction sur erreur de validation
-globs:
+---
+alwaysApply: false
+---
   - "*.py"
 filters:
   - type: content

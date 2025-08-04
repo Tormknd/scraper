@@ -1,5 +1,6 @@
-description: Suggérer des sélecteurs robustes
-globs:
+---
+alwaysApply: false
+---
   - "**/extractors/*.py"
 filters:
   - type: content

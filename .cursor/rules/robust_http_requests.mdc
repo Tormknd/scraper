@@ -1,5 +1,6 @@
-description: Appliquer retry/backoff sur chaque requête HTTP
-globs:
+---
+alwaysApply: false
+---
   - "*.py"
 filters:
   - type: content

@@ -1,5 +1,6 @@
-description: Générer automatiquement des tests unitaires pour extractors
-globs:
+---
+alwaysApply: false
+---
   - "**/extractors/*.py"
 filters:
   - type: event

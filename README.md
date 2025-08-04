@@ -4,35 +4,38 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.4+-black.svg)](https://nextjs.org/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-purple.svg)](https://openai.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Scraper-LLM** est une application qui combine la puissance de l'IA (OpenAI) avec le web scraping pour extraire automatiquement des données structurées de n'importe quel site web. L'application utilise l'intelligence artificielle pour comprendre le contenu des pages et extraire intelligemment les produits, images et prix.
+> **Scraper-LLM** est une application révolutionnaire qui combine l'intelligence artificielle (OpenAI) avec des techniques avancées de web scraping pour extraire automatiquement des données structurées de n'importe quel site web. L'application utilise l'IA pour comprendre le contenu des pages et extraire intelligemment les produits, images, prix et informations pertinentes.
 
 ## ✨ Fonctionnalités Principales
 
 - 🧠 **Extraction Intelligente** : Utilise GPT-4o-mini pour analyser et extraire les données pertinentes
 - 🖼️ **Téléchargement d'Images** : Télécharge automatiquement les images et les stocke localement
-- 🎯 **Extraction Structurée** : Retourne des données JSON organisées (titre, prix, image)
-- 🌐 **Interface Web Moderne** : Interface terminal interactive inspirée de vzlabs.ai
+- 🎯 **Extraction Structurée** : Retourne des données JSON organisées (titre, prix, image, description)
 - ⚡ **Performance Optimisée** : Gestion des erreurs, retry automatique, déduplication
-- 🔒 **Sécurité** : Validation des URLs, gestion des timeouts, sanitisation
+- 🔒 **Sécurité Avancée** : Validation des URLs, gestion des timeouts, sanitisation
+- 🌐 **Rendu JavaScript** : Support des sites dynamiques avec Playwright et Selenium
+- 📰 **Extraction de Contenu** : Algorithmes de lisibilité pour un contenu de qualité
+- 🏷️ **Données Structurées** : Extraction des métadonnées Schema.org, Open Graph, etc.
 
 ## 🏗️ Architecture
 
 ```
 ScrapingTest/
 ├── backend/                 # API FastAPI
-│   ├── main.py             # Serveur FastAPI
-│   ├── scraper.py          # Logique de scraping avec OpenAI
+│   ├── main.py             # Serveur FastAPI principal
+│   ├── scraper.py          # Scraper de base avec OpenAI
+│   ├── advanced_scraper.py # Scraper avancé avec multiples méthodes
 │   ├── requirements.txt    # Dépendances Python
+│   ├── env.example         # Configuration d'environnement
 │   └── images/             # Images téléchargées
 └── frontend/               # Interface Next.js
-    ├── src/app/page.tsx    # Interface terminal
+    ├── src/app/page.tsx    # Interface terminal interactive
     ├── package.json        # Dépendances Node.js
     └── components/         # Composants UI
 ```
 
-## 🚀 Installation et Configuration
+## 🚀 Installation Rapide
 
 ### Prérequis
 
@@ -40,44 +43,37 @@ ScrapingTest/
 - **Node.js 18+**
 - **Clé API OpenAI** (gratuite ou payante)
 
-### 1. Cloner le Repository
+### 1. Cloner et Installer
 
 ```bash
+# Cloner le repository
 git clone https://github.com/Tormknd/scraper.git
 cd scraper
-```
 
-### 2. Configuration du Backend
-
-```bash
+# Configuration du backend
 cd backend
-
-# Installer les dépendances Python
 pip install -r requirements.txt
 
-# Configurer les variables d'environnement
+# Configuration du frontend
+cd ../frontend
+npm install
+```
+
+### 2. Configuration
+
+```bash
+# Dans le dossier backend
 cp env.example .env
 ```
 
-Éditez le fichier `.env` :
+Éditez le fichier `backend/.env` :
 ```env
 OPENAI_API_KEY=sk-votre-clé-api-openai
 # Optionnel : changer le modèle OpenAI
 # OPENAI_MODEL=gpt-4o-mini
 ```
 
-### 3. Configuration du Frontend
-
-```bash
-cd ../frontend
-
-# Installer les dépendances Node.js
-npm install
-```
-
-## 🎮 Utilisation
-
-### Démarrage des Services
+### 3. Démarrer l'Application
 
 **Terminal 1 - Backend :**
 ```bash
@@ -91,18 +87,24 @@ cd frontend
 npm run dev
 ```
 
-L'application sera accessible sur `http://localhost:3000`
+🎉 **L'application est maintenant accessible sur `http://localhost:3000`**
 
-### Interface Terminal
+## 🎮 Utilisation Simple
 
-L'interface propose une expérience terminal interactive avec les commandes suivantes :
+### Interface Terminal Interactive
+
+1. Ouvrez `http://localhost:3000`
+2. Utilisez les commandes suivantes :
 
 ```bash
 # Afficher l'aide
 help
 
-# Scraper une URL
+# Scraper une URL (méthode de base)
 scrap https://example.com
+
+# Scraper avec méthode avancée
+scrap-advanced https://example.com
 
 # Effacer l'écran
 clear
@@ -111,39 +113,55 @@ clear
 ↑ / ↓  # Naviguer dans les 10 dernières commandes
 ```
 
-### Exemple d'Utilisation
+### Exemples d'Utilisation
 
-1. Ouvrez `http://localhost:3000`
-2. Tapez `scrap https://www.example-ecommerce.com`
-3. L'IA analyse la page et extrait automatiquement :
-   - Les titres des produits
-   - Les prix (si disponibles)
-   - Les images (téléchargées localement)
-4. Les résultats s'affichent en JSON et les images dans une galerie
+#### Scraping de Base
+```bash
+scrap https://www.amazon.fr/dp/B08N5WRWNW
+```
+Extrait automatiquement :
+- Titres des produits
+- Prix
+- Images (téléchargées localement)
+- Descriptions
 
-## 🔧 Configuration Avancée
+#### Scraping Avancé
+```bash
+scrap-advanced https://www.lemonde.fr
+```
+Utilise des méthodes avancées :
+- Rendu JavaScript
+- Extraction de contenu principal
+- Métadonnées structurées
+- Images haute qualité
 
-### Variables d'Environnement
+## 🔧 Fonctionnalités Avancées
 
-| Variable | Description | Défaut |
-|----------|-------------|---------|
-| `OPENAI_API_KEY` | Clé API OpenAI (requise) | - |
-| `OPENAI_MODEL` | Modèle OpenAI à utiliser | `gpt-4o-mini` |
+### Méthodes d'Extraction
 
-### Paramètres de Performance
+Le scraper avancé utilise plusieurs méthodes en cascade :
 
-Dans `backend/scraper.py` :
+1. **Playwright** : Rendu JavaScript complet
+2. **Selenium** : Automatisation navigateur
+3. **Requests-HTML** : Rendu JavaScript léger
+4. **Newspaper3k** : Extraction de contenu journalistique
+5. **Readability** : Algorithmes de lisibilité
+6. **Extruct** : Données structurées (Schema.org, Open Graph)
+
+### Configuration Avancée
+
+Dans `backend/advanced_scraper.py` :
 ```python
-TIMEOUT     = 10        # Timeout HTTP (secondes)
-RETRIES     = 3         # Nombre de tentatives
-PAUSE_IMG   = 0.4       # Pause entre téléchargements d'images
-MAX_TOKENS  = 11_000    # Limite de tokens pour OpenAI
+# Paramètres de performance
+TIMEOUT = 30              # Timeout HTTP (secondes)
+MAX_PAGES = 5             # Nombre max de pages à scraper
+USE_JS = True             # Activer le rendu JavaScript
+RETRIES = 3               # Nombre de tentatives
 ```
 
-## 📊 Format des Données
+## 📊 Formats de Données
 
-L'API retourne un JSON structuré :
-
+### Scraping de Base
 ```json
 {
   "items": [
@@ -157,38 +175,84 @@ L'API retourne un JSON structuré :
 }
 ```
 
-## 🛠️ API Endpoints
-
-### POST `/scrape`
-
-Extrait les données d'une URL donnée.
-
-**Requête :**
+### Scraping Avancé
 ```json
 {
-  "url": "https://example.com"
+  "url": "https://example.com",
+  "title": "Titre de la page",
+  "meta_description": "Description meta",
+  "main_content": "Contenu principal extrait",
+  "structured_data": {
+    "schema_org": [...],
+    "open_graph": {...},
+    "twitter_cards": {...}
+  },
+  "images": [
+    {
+      "src": "https://example.com/img.jpg",
+      "alt": "Description",
+      "local_path": "/images/img.jpg"
+    }
+  ],
+  "links": [...],
+  "metadata": {
+    "language": "fr",
+    "author": "Auteur",
+    "published_date": "2024-01-01"
+  }
 }
 ```
 
-**Réponse :**
-```json
-{
-  "items": [
-    {
-      "title": "Produit 1",
-      "price": "19.99 €",
-      "img": "https://example.com/img1.jpg",
-      "img_local": "/images/img1.jpg"
-    }
-  ]
-}
+## 🛠️ API Endpoints
+
+### POST `/scrape` - Scraping de Base
+```bash
+curl -X POST "http://localhost:8000/scrape" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com"}'
+```
+
+### POST `/scrape-advanced` - Scraping Avancé
+```bash
+curl -X POST "http://localhost:8000/scrape-advanced" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com", "use_js": true, "max_pages": 3}'
+```
+
+### POST `/extract` - Extraction de Contenu
+```bash
+curl -X POST "http://localhost:8000/extract" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com"}'
+```
+
+## 🎯 Cas d'Usage
+
+### E-commerce
+```bash
+scrap https://www.fnac.com
+scrap https://www.darty.com
+scrap https://www.cdiscount.com
+```
+
+### Actualités
+```bash
+scrap-advanced https://www.lemonde.fr
+scrap-advanced https://www.lefigaro.fr
+scrap-advanced https://www.liberation.fr
+```
+
+### Blogs et Sites Web
+```bash
+scrap-advanced https://www.medium.com
+scrap-advanced https://www.dev.to
 ```
 
 ## 🔍 Fonctionnalités Techniques
 
 ### Intelligence Artificielle
 - **Modèle** : GPT-4o-mini (optimisé pour la vitesse et le coût)
-- **Prompt** : Analyse du HTML pour extraire les éléments pertinents
+- **Prompt** : Analyse intelligente du HTML pour extraire les éléments pertinents
 - **Schéma** : Structure JSON prédéfinie pour la cohérence
 
 ### Gestion des Images
@@ -202,6 +266,7 @@ Extrait les données d'une URL donnée.
 - **Timeout configurable** pour éviter les blocages
 - **Gestion d'erreurs** complète avec messages explicites
 - **Sanitisation des URLs** pour éviter les injections
+- **Anti-détection** : User-Agents aléatoires, délais
 
 ## 🎨 Interface Utilisateur
 
@@ -211,6 +276,7 @@ L'interface s'inspire des terminaux modernes avec :
 - **Animations fluides** avec Framer Motion
 - **Galerie d'images** responsive
 - **Navigation clavier** complète
+- **Historique des commandes** avec recherche
 
 ## 🚨 Gestion des Erreurs
 
@@ -220,6 +286,7 @@ L'application gère automatiquement :
 - **Erreurs OpenAI** : Messages d'erreur explicites
 - **Images manquantes** : Fallback vers URL distante
 - **HTML malformé** : Nettoyage automatique avec BeautifulSoup
+- **Sites protégés** : Utilisation de méthodes alternatives
 
 ## 📈 Performance
 
@@ -227,6 +294,7 @@ L'application gère automatiquement :
 - **Cache d'images** : Évite les téléchargements redondants
 - **Limite de tokens** : Contrôle des coûts OpenAI
 - **Concurrence** : Gestion asynchrone des requêtes
+- **Méthodes multiples** : Fallback automatique en cas d'échec
 
 ## 🔒 Sécurité
 
@@ -234,42 +302,55 @@ L'application gère automatiquement :
 - **Sanitisation** : Encodage des caractères spéciaux
 - **User-Agent** : Identification claire du bot
 - **Rate limiting** : Pause entre les téléchargements d'images
+- **Anti-bot** : Techniques pour éviter la détection
+
+## 🚀 Démarrage Rapide pour Test
+
+### Test Immédiat (5 minutes)
+
+1. **Installer les dépendances :**
+```bash
+cd backend && pip install -r requirements.txt
+cd ../frontend && npm install
+```
+
+2. **Configurer OpenAI :**
+```bash
+# Dans backend/.env
+OPENAI_API_KEY=sk-votre-clé-api-openai
+```
+
+3. **Démarrer :**
+```bash
+# Terminal 1
+cd backend && uvicorn main:app --reload --port 8000
+
+# Terminal 2  
+cd frontend && npm run dev
+```
+
+4. **Tester :**
+- Ouvrez `http://localhost:3000`
+- Tapez : `scrap https://www.example.com`
+- Admirez le résultat ! 🎉
+
+## 📚 Ressources
+
+- [Documentation FastAPI](https://fastapi.tiangolo.com/)
+- [Documentation Next.js](https://nextjs.org/docs)
+- [API OpenAI](https://platform.openai.com/docs)
+- [Playwright Documentation](https://playwright.dev/)
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! Voici comment contribuer :
-
-1. **Fork** le projet
-2. **Créez** une branche pour votre fonctionnalité
-3. **Commitez** vos changements
-4. **Poussez** vers la branche
-5. **Ouvrez** une Pull Request
-
-### Améliorations Suggérées
-
-- [ ] Support de l'authentification pour les sites protégés
-- [ ] Extraction de données plus complexes (avis, descriptions)
-- [ ] Interface d'administration pour gérer les extractions
-- [ ] Support de l'export vers CSV/Excel
-- [ ] Intégration avec d'autres modèles d'IA
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 🙏 Remerciements
-
-- **OpenAI** pour l'accès à leurs modèles d'IA
-- **FastAPI** pour le framework backend performant
-- **Next.js** pour l'interface utilisateur moderne
-- **BeautifulSoup** pour le parsing HTML robuste
-
-## 📞 Support
-
-Pour toute question ou problème :
-- **Issues GitHub** : [Créer une issue](https://github.com/Tormknd/scraper/issues)
-- **Email** : [Votre email]
+Les contributions sont les bienvenues ! N'hésitez pas à :
+- Signaler des bugs
+- Proposer des améliorations
+- Ajouter de nouvelles fonctionnalités
+- Améliorer la documentation
 
 ---
 
-**Scraper-LLM** - Transformez n'importe quel site web en données structurées avec l'intelligence artificielle ! 🚀 
+**Scraper-LLM** - Transformez n'importe quel site web en données structurées avec l'intelligence artificielle ! 🚀
+
+*Développé avec ❤️ en utilisant FastAPI, Next.js et OpenAI* 
