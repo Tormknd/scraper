@@ -488,19 +488,19 @@ def _extract_links_and_navigation(html: str, base_url: str) -> List[Dict[str, st
     
     nav_links = soup.find_all(['nav', 'menu', '.navigation', '.nav', '.menu'])
     for nav in nav_links:
-            for link in nav.find_all('a', href=True):
+        for link in nav.find_all('a', href=True):
             text = link.get_text().strip()
             href = link.get('href', '')
             
             if text and len(text) > 2:
                 if not href.startswith('http'):
-                        href = urljoin(base_url, href)
-                    
-                    links.append({
-                        'text': text,
+                    href = urljoin(base_url, href)
+                
+                links.append({
+                    'text': text,
                     'href': href,
-                        'type': 'navigation'
-                    })
+                    'type': 'navigation'
+                })
     
     content_links = soup.find_all('a', href=True)
     nav_texts = {link['text'] for link in links}
@@ -513,11 +513,11 @@ def _extract_links_and_navigation(html: str, base_url: str) -> List[Dict[str, st
             if not href.startswith('http'):
                 href = urljoin(base_url, href)
             
-                links.append({
-                    'text': text,
+            links.append({
+                'text': text,
                 'href': href,
-                    'type': 'content'
-                })
+                'type': 'content'
+            })
     
     return links[:20]
 
@@ -539,7 +539,7 @@ def _extract_structured_data(html: str) -> Dict[str, Any]:
             headings.append({
                     'level': i,
                 'text': h.get_text().strip()
-                })
+            })
     if headings:
         structured_data['headings'] = headings[:10]
     
@@ -560,7 +560,7 @@ def _truncate_tokens(text: str) -> str:
     words = text.split()
     if len(words) > MAX_TOKENS // 2:
         return ' '.join(words[:MAX_TOKENS // 2]) + "..."
-        return text
+    return text
 
 def _sanitize_url(url: str) -> str:
     parsed = urlsplit(url)
@@ -580,8 +580,8 @@ def _download_image(url: str) -> str:
         dest = IMG_DIR / filename
         with open(dest, 'wb') as f:
             f.write(response.content)
-
-            time.sleep(PAUSE_IMG)
+        
+        time.sleep(PAUSE_IMG)
         return f"/images/{dest.name}"
     except Exception as e:
         return url
