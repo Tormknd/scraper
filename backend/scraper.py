@@ -171,7 +171,7 @@ def chat_with_ai(session_id: str, user_message: str, tools: Optional[List] = Non
     session = get_or_create_session(session_id)
     session.add_message("user", user_message)
     
-    client = OpenAI(api_key=API_KEY)
+    client = OpenAI(api_key=API_KEY, base_url=None)
     
     try:
         response = client.chat.completions.create(
@@ -608,7 +608,7 @@ def analyze_website(session_id: str, url: str) -> Dict:
         scraped_data = _smart_scrape(url)
         content_for_ai = scraped_data.get('content_for_ai', '')
         
-        client = OpenAI(api_key=API_KEY)
+        client = OpenAI(api_key=API_KEY, base_url=None)
         response = client.chat.completions.create(
             model=MODEL,
             messages=[
@@ -667,7 +667,7 @@ Contenu du site:
 
 Extrait les données demandées et retourne-les dans un format structuré."""
 
-        client = OpenAI(api_key=API_KEY)
+        client = OpenAI(api_key=API_KEY, base_url=None)
         response = client.chat.completions.create(
             model=MODEL,
             messages=[
