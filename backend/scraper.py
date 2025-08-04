@@ -714,7 +714,10 @@ def _download_image(url: str) -> str:
             f.write(response.content)
         
         time.sleep(PAUSE_IMG)
-        return f"/images/{dest.name}"
+        
+        # Use deployed backend URL instead of localhost
+        deployed_url = os.getenv("DEPLOYED_URL", "https://scraper-mq45.onrender.com")
+        return f"{deployed_url}/images/{dest.name}"
     except Exception as e:
         return url
 
@@ -758,10 +761,19 @@ def analyze_website(session_id: str, url: str) -> Dict:
         
         session.website_analysis = analysis
         
-        ai_response = f"J'ai analysé le site web {url}. "
-        ai_response += f"C'est un site de type {analysis.get('website_type', 'inconnu')}. "
-        ai_response += f"Les données disponibles incluent: {', '.join(analysis.get('available_data', []))}. "
-        ai_response += f"Je recommande: {', '.join(analysis.get('suggested_extractions', []))}"
+        ai_response = f"🎯 **Analyse Terminée!**\n\n"
+        ai_response += f"**Site analysé:** {url}\n"
+        ai_response += f"**Type de site:** {analysis.get('website_type', 'inconnu')}\n\n"
+        ai_response += f"**📊 Données disponibles:**\n"
+        for data in analysis.get('available_data', []):
+            ai_response += f"• {data}\n"
+        ai_response += f"\n**💡 Suggestions d'extraction:**\n"
+        for suggestion in analysis.get('suggested_extractions', []):
+            ai_response += f"• {suggestion}\n"
+        ai_response += f"\n**🚀 Prochaines étapes:**\n"
+        ai_response += f"• Utilisez 'extract [vos exigences]' pour extraire les données\n"
+        ai_response += f"• Exemple: 'extract book titles and prices'\n"
+        ai_response += f"• Ou: 'extract all product information'"
         
         return {
             "success": True,
@@ -823,9 +835,15 @@ Extrait les données demandées et retourne-les dans un format structuré."""
         
         extraction_result['items'] = _dedup(extraction_result.get('items', []))
         
-        ai_response = f"J'ai extrait {len(extraction_result.get('items', []))} éléments selon vos exigences: {requirements}. "
-        ai_response += f"Méthode d'extraction: {scraped_data.get('extraction_method', 'standard')}. "
-        ai_response += f"Pages analysées: {scraped_data.get('total_pages_scraped', 1)}"
+        ai_response = f"📊 **Extraction Terminée!**\n\n"
+        ai_response += f"**✅ Résultats:** {len(extraction_result.get('items', []))} éléments extraits\n"
+        ai_response += f"**🎯 Exigences:** {requirements}\n"
+        ai_response += f"**🔧 Méthode:** {scraped_data.get('extraction_method', 'standard')}\n"
+        ai_response += f"**📄 Pages analysées:** {scraped_data.get('total_pages_scraped', 1)}\n\n"
+        ai_response += f"**💡 Prochaines étapes:**\n"
+        ai_response += f"• Utilisez 'chat <question>' pour poser des questions sur les données\n"
+        ai_response += f"• Exemple: 'chat montre-moi les prix les plus élevés'\n"
+        ai_response += f"• Ou: 'chat analyse les tendances des prix'"
         
         return {
             "success": True,
@@ -857,17 +875,24 @@ def get_conversation_history(session_id: str) -> List[Dict]:
 def get_help_info() -> Dict:
     return {
         "commands": {
-            "analyze <url>": "Analyse un site web et détermine son type et les données disponibles",
-            "extract <requirements>": "Extrait des données selon vos exigences spécifiques",
-            "chat <message>": "Pose une question à l'IA sur le scraping ou l'extraction",
-            "help": "Affiche cette aide",
-            "clear": "Efface l'écran"
+            "new": "🆕 Créer une nouvelle session IA",
+            "analyze <url>": "🔍 Analyser un site web et déterminer les données disponibles",
+            "extract <requirements>": "📊 Extraire des données selon vos exigences",
+            "chat <message>": "💬 Poser une question à l'IA",
+            "help": "❓ Afficher cette aide",
+            "history": "📜 Voir l'historique de conversation"
         },
         "examples": {
-            "analyze https://example.com": "Analyse le site example.com",
-            "extract produits avec prix et images": "Extrait les produits avec leurs prix et images",
-            "extract articles de blog": "Extrait les articles de blog",
-            "chat comment extraire les prix?": "Demande de l'aide sur l'extraction des prix"
+            "analyze https://example.com": "🔍 Analyser le site example.com",
+            "extract produits avec prix et images": "📊 Extraire les produits avec leurs prix et images",
+            "extract articles de blog": "📊 Extraire les articles de blog",
+            "chat comment extraire les prix?": "💬 Demander de l'aide sur l'extraction des prix"
+        },
+        "workflow": {
+            "step1": "1. 🆕 'new' - Créer une session",
+            "step2": "2. 🔍 'analyze <url>' - Analyser le site",
+            "step3": "3. 📊 'extract <requirements>' - Extraire les données",
+            "step4": "4. 💬 'chat <question>' - Poser des questions"
         }
     }
 
