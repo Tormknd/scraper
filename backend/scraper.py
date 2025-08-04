@@ -261,7 +261,7 @@ async def _advanced_smart_scrape(url: str, requirements: str = "") -> Dict[str, 
         
         content_for_ai += f"Contenu principal:\n{scraped_content.main_content[:5000]}\n\n"
         
-            if scraped_content.structured_data:
+        if scraped_content.structured_data:
             content_for_ai += "Données structurées:\n"
             for key, value in scraped_content.structured_data.items():
                 if isinstance(value, list) and len(value) > 0:
@@ -272,7 +272,7 @@ async def _advanced_smart_scrape(url: str, requirements: str = "") -> Dict[str, 
                     content_for_ai += f"{key}: {value}\n"
             content_for_ai += "\n"
         
-            if scraped_content.metadata:
+        if scraped_content.metadata:
             content_for_ai += "Métadonnées:\n"
             for key, value in scraped_content.metadata.items():
                 content_for_ai += f"{key}: {value}\n"
@@ -283,24 +283,24 @@ async def _advanced_smart_scrape(url: str, requirements: str = "") -> Dict[str, 
         
         for i, link in enumerate(scraped_content.links[:15]):
             content_for_ai += f"Lien {i+1}: {link.get('href', 'N/A')} - {link.get('text', 'Sans texte')}\n"
-            
-            return {
-                'main_page': {
-                    'url': url,
-                    'title': scraped_content.title,
+        
+        return {
+            'main_page': {
+                'url': url,
+                'title': scraped_content.title,
                 'content': scraped_content.main_content,
-                    'structured_data': scraped_content.structured_data,
-                    'metadata': scraped_content.metadata,
+                'structured_data': scraped_content.structured_data,
+                'metadata': scraped_content.metadata,
                 'images': scraped_content.images,
                 'links': scraped_content.links
-                },
+            },
             'additional_pages': [],
-                'total_pages_scraped': 1,
+            'total_pages_scraped': 1,
             'extraction_method': 'advanced',
             'content_for_ai': content_for_ai
-            }
-            
-        except Exception as e:
+        }
+        
+    except Exception as e:
         raise ScraperError(f"Advanced scraping failed: {e}")
 
 async def _basic_smart_scrape(url: str, requirements: str = "") -> Dict[str, Any]:
@@ -321,24 +321,24 @@ async def _basic_smart_scrape(url: str, requirements: str = "") -> Dict[str, Any
         links = soup.find_all('a', href=True)
     
     for link in links:
-            link_text = link.get_text().strip().lower()
-            link_url = link.get('href', '')
-            
-            is_relevant = any(keyword in link_text for keyword in keywords)
-            
-            if is_relevant and link_url.startswith(url):
-                relevant_pages.append({
-                    'url': link_url,
-                    'text': link_text
-                })
+        link_text = link.get_text().strip().lower()
+        link_url = link.get('href', '')
         
+        is_relevant = any(keyword in link_text for keyword in keywords)
+        
+        if is_relevant and link_url.startswith(url):
+            relevant_pages.append({
+                'url': link_url,
+                'text': link_text
+            })
+    
     for i, page in enumerate(relevant_pages[:3]):
         try:
             page_html = _fetch(page['url'])
-                page_soup = BeautifulSoup(page_html, 'html.parser')
-                page['content'] = _extract_text_content(page_html)
+            page_soup = BeautifulSoup(page_html, 'html.parser')
+            page['content'] = _extract_text_content(page_html)
         except Exception as e:
-                pass
+            pass
     
     content_for_ai = f"URL: {url}\nTitre: {title_text}\nDescription: {description}\n\n"
     content_for_ai += f"Contenu principal:\n{_extract_text_content(html)[:3000]}\n\n"
