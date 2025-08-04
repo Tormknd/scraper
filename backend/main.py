@@ -190,6 +190,12 @@ async def root():
         "status": "running",
         "deployment": "render",
         "real_time": True,
+        "capabilities": {
+            "basic_scraping": True,
+            "advanced_scraping": "check_availability",
+            "ai_extraction": True,
+            "image_download": True
+        },
         "endpoints": {
             "/scrape": "POST - Extraction legacy (compatibilité)",
             "/analyze": "POST - Analyse un site web",
@@ -198,7 +204,8 @@ async def root():
             "/history/{session_id}": "GET - Historique de conversation",
             "/session/new": "POST - Crée une nouvelle session",
             "/help": "GET - Aide et commandes disponibles",
-            "/health": "GET - Health check"
+            "/health": "GET - Health check",
+            "/capabilities": "GET - Check available features"
         },
         "usage": {
             "1. Créer une session": "POST /session/new",
@@ -248,6 +255,49 @@ async def health_check():
         "deployment": "render",
         "real_time": True,
         "uptime": "running"
+    }
+
+@app.get("/capabilities")
+async def capabilities_check():
+    capabilities = {
+        "basic_scraping": True,
+        "ai_extraction": True,
+        "image_download": True,
+        "advanced_scraping": False,
+        "playwright": False,
+        "selenium": False,
+        "newspaper3k": False
+    }
+    
+    try:
+        import playwright
+        capabilities["playwright"] = True
+    except ImportError:
+        pass
+    
+    try:
+        import selenium
+        capabilities["selenium"] = True
+    except ImportError:
+        pass
+    
+    try:
+        import newspaper
+        capabilities["newspaper3k"] = True
+    except ImportError:
+        pass
+    
+    if capabilities["playwright"] or capabilities["selenium"] or capabilities["newspaper3k"]:
+        capabilities["advanced_scraping"] = True
+    
+    return {
+        "api_version": "2.0.0",
+        "deployment_platform": "render",
+        "real_time_enabled": True,
+        "auto_scaling": True,
+        "health_checks": True,
+        "live_logs": True,
+        "capabilities": capabilities
     }
 
 @app.get("/metrics")
