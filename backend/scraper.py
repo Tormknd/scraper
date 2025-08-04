@@ -379,7 +379,7 @@ def _smart_scrape(url: str, requirements: str = "") -> Dict[str, Any]:
             loop.close()
             return result
         except Exception as e2:
-        return _basic_smart_scrape_sync(url, requirements)
+            return _basic_smart_scrape_sync(url, requirements)
 
 def _basic_smart_scrape_sync(url: str, requirements: str = "") -> Dict[str, Any]:
     html = _fetch(url)
