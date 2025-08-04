@@ -261,7 +261,7 @@ async def _advanced_smart_scrape(url: str, requirements: str = "") -> Dict[str, 
         
         content_for_ai += f"Contenu principal:\n{scraped_content.main_content[:5000]}\n\n"
         
-        if scraped_content.structured_data:
+            if scraped_content.structured_data:
             content_for_ai += "Données structurées:\n"
             for key, value in scraped_content.structured_data.items():
                 if isinstance(value, list) and len(value) > 0:
@@ -272,7 +272,7 @@ async def _advanced_smart_scrape(url: str, requirements: str = "") -> Dict[str, 
                     content_for_ai += f"{key}: {value}\n"
             content_for_ai += "\n"
         
-        if scraped_content.metadata:
+            if scraped_content.metadata:
             content_for_ai += "Métadonnées:\n"
             for key, value in scraped_content.metadata.items():
                 content_for_ai += f"{key}: {value}\n"
@@ -283,24 +283,24 @@ async def _advanced_smart_scrape(url: str, requirements: str = "") -> Dict[str, 
         
         for i, link in enumerate(scraped_content.links[:15]):
             content_for_ai += f"Lien {i+1}: {link.get('href', 'N/A')} - {link.get('text', 'Sans texte')}\n"
-        
-        return {
-            'main_page': {
-                'url': url,
-                'title': scraped_content.title,
+            
+            return {
+                'main_page': {
+                    'url': url,
+                    'title': scraped_content.title,
                 'content': scraped_content.main_content,
-                'structured_data': scraped_content.structured_data,
-                'metadata': scraped_content.metadata,
+                    'structured_data': scraped_content.structured_data,
+                    'metadata': scraped_content.metadata,
                 'images': scraped_content.images,
                 'links': scraped_content.links
-            },
+                },
             'additional_pages': [],
-            'total_pages_scraped': 1,
+                'total_pages_scraped': 1,
             'extraction_method': 'advanced',
             'content_for_ai': content_for_ai
-        }
-        
-    except Exception as e:
+            }
+            
+        except Exception as e:
         raise ScraperError(f"Advanced scraping failed: {e}")
 
 async def _basic_smart_scrape(url: str, requirements: str = "") -> Dict[str, Any]:
@@ -319,8 +319,8 @@ async def _basic_smart_scrape(url: str, requirements: str = "") -> Dict[str, Any
     if requirements:
         keywords = requirements.lower().split()
         links = soup.find_all('a', href=True)
-        
-        for link in links:
+    
+    for link in links:
             link_text = link.get_text().strip().lower()
             link_url = link.get('href', '')
             
@@ -332,12 +332,12 @@ async def _basic_smart_scrape(url: str, requirements: str = "") -> Dict[str, Any
                     'text': link_text
                 })
         
-        for i, page in enumerate(relevant_pages[:3]):
-            try:
-                page_html = _fetch(page['url'])
+    for i, page in enumerate(relevant_pages[:3]):
+        try:
+            page_html = _fetch(page['url'])
                 page_soup = BeautifulSoup(page_html, 'html.parser')
                 page['content'] = _extract_text_content(page_html)
-            except Exception as e:
+        except Exception as e:
                 pass
     
     content_for_ai = f"URL: {url}\nTitre: {title_text}\nDescription: {description}\n\n"
@@ -379,7 +379,7 @@ def _smart_scrape(url: str, requirements: str = "") -> Dict[str, Any]:
             loop.close()
             return result
         except Exception as e2:
-            return _basic_smart_scrape_sync(url, requirements)
+        return _basic_smart_scrape_sync(url, requirements)
 
 def _basic_smart_scrape_sync(url: str, requirements: str = "") -> Dict[str, Any]:
     html = _fetch(url)
@@ -464,7 +464,7 @@ def _extract_text_content(html: str) -> str:
             tag.decompose()
     
     main_content_selectors = [
-        'main', 'article', '.content', '.main-content', '.post-content',
+        'main', 'article', '.content', '.main-content', '.post-content', 
         '.entry-content', '#content', '#main', '.container', '.wrapper'
     ]
     
@@ -488,19 +488,19 @@ def _extract_links_and_navigation(html: str, base_url: str) -> List[Dict[str, st
     
     nav_links = soup.find_all(['nav', 'menu', '.navigation', '.nav', '.menu'])
     for nav in nav_links:
-        for link in nav.find_all('a', href=True):
+            for link in nav.find_all('a', href=True):
             text = link.get_text().strip()
             href = link.get('href', '')
             
             if text and len(text) > 2:
                 if not href.startswith('http'):
-                    href = urljoin(base_url, href)
-                
-                links.append({
-                    'text': text,
+                        href = urljoin(base_url, href)
+                    
+                    links.append({
+                        'text': text,
                     'href': href,
-                    'type': 'navigation'
-                })
+                        'type': 'navigation'
+                    })
     
     content_links = soup.find_all('a', href=True)
     nav_texts = {link['text'] for link in links}
@@ -513,11 +513,11 @@ def _extract_links_and_navigation(html: str, base_url: str) -> List[Dict[str, st
             if not href.startswith('http'):
                 href = urljoin(base_url, href)
             
-            links.append({
-                'text': text,
+                links.append({
+                    'text': text,
                 'href': href,
-                'type': 'content'
-            })
+                    'type': 'content'
+                })
     
     return links[:20]
 
@@ -537,9 +537,9 @@ def _extract_structured_data(html: str) -> Dict[str, Any]:
     for i in range(1, 7):
         for h in soup.find_all(f'h{i}'):
             headings.append({
-                'level': i,
+                    'level': i,
                 'text': h.get_text().strip()
-            })
+                })
     if headings:
         structured_data['headings'] = headings[:10]
     
@@ -560,7 +560,7 @@ def _truncate_tokens(text: str) -> str:
     words = text.split()
     if len(words) > MAX_TOKENS // 2:
         return ' '.join(words[:MAX_TOKENS // 2]) + "..."
-    return text
+        return text
 
 def _sanitize_url(url: str) -> str:
     parsed = urlsplit(url)
@@ -580,8 +580,8 @@ def _download_image(url: str) -> str:
         dest = IMG_DIR / filename
         with open(dest, 'wb') as f:
             f.write(response.content)
-        
-        time.sleep(PAUSE_IMG)
+
+            time.sleep(PAUSE_IMG)
         return f"/images/{dest.name}"
     except Exception as e:
         return url
@@ -709,7 +709,7 @@ Extrait les données demandées et retourne-les dans un format structuré."""
         }
 
 def chat_message(session_id: str, message: str) -> str:
-    return chat_with_ai(session_id, message)
+        return chat_with_ai(session_id, message)
 
 def get_conversation_history(session_id: str) -> List[Dict]:
     session = get_or_create_session(session_id)

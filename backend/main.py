@@ -194,7 +194,7 @@ async def root():
             "basic_scraping": True,
             "advanced_scraping": "check_availability",
             "ai_extraction": True,
-            "image_download": True
+            "image_download": "check_availability"
         },
         "endpoints": {
             "/scrape": "POST - Extraction legacy (compatibilité)",
@@ -262,11 +262,12 @@ async def capabilities_check():
     capabilities = {
         "basic_scraping": True,
         "ai_extraction": True,
-        "image_download": True,
+        "image_download": False,
         "advanced_scraping": False,
         "playwright": False,
         "selenium": False,
-        "newspaper3k": False
+        "newspaper3k": False,
+        "pillow": False
     }
     
     try:
@@ -284,6 +285,13 @@ async def capabilities_check():
     try:
         import newspaper
         capabilities["newspaper3k"] = True
+    except ImportError:
+        pass
+    
+    try:
+        import PIL
+        capabilities["pillow"] = True
+        capabilities["image_download"] = True
     except ImportError:
         pass
     
